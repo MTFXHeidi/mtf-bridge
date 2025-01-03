@@ -20,21 +20,10 @@ exports("GetPlayer", function(src)
     if Config.Framework == "qb" then
         return Core.Functions.GetPlayer(src)
     elseif Config.Framework == "esx" then
-        return ESX.GetPlayerFromId(src)
+        return Core.GetPlayerFromId(src)
     end
     return nil
 end)
-
--- exports("GetPlayerID", function()
---     local Player = exports['mtf-bridge']:GetPlayer(src)
---     if Config.Framework == "qb" then
---         return Player.PlayerData.source
---     elseif Config.Framework == "esx" then
---         return Player.source
---     end
---     return nil
--- end)
-
 
 exports("GetPlayerJob", function(src)
     local Player = exports['mtf-bridge']:GetPlayer(src)
@@ -79,20 +68,20 @@ end)
 
 exports("GetPlayerFromCitizenID", function(citizenid)
     if Config.Framework == 'qb' then
-        return QBCore.Functions.GetPlayerByCitizenId(citizenid)
+        return Core.Functions.GetPlayerByCitizenId(citizenid)
     elseif Config.Framework == 'esx' then
-        return ESX.GetPlayerFromIdentifier(citizenid)
+        return Core.GetPlayerFromIdentifier(citizenid)
     end
     return false
 end)
 
-exports("Notify", function(src, message, type, duration)
+exports("ServerNotify", function(src, message, notitype, duration)
     if Config.Notify == 'ox' then 
         TriggerClientEvent('ox_lib:notify', src, {description = message, duration = duration})
     elseif Config.Notify == 'qb' then
-        TriggerClientEvent('QBCore:Notify', src, message, type, duration)
+        TriggerClientEvent('QBCore:Notify', src, message, notitype, duration)
     elseif Config.Notify == 'esx' then 
-        TriggerClientEvent('esx:showNotification', src, message, type, duration)
+        TriggerClientEvent('esx:showNotification', src, message, notitype, duration)
     end
 end)
 
@@ -101,8 +90,7 @@ exports("GetPlayerEconomy", function(src, type)
     if Config.Framework == "qb" then
         return Player.PlayerData.money[tostring(type)]
     elseif Config.Framework == "esx" then
-        local xPlayer = ESX.GetPlayerFromId(src)
-        return xPlayer.getAccount(type).money
+        return Player.getAccount(type).money
     end
     return 0
 end)
@@ -113,8 +101,7 @@ exports("AddEconomy", function(src, type, amt)
     if Config.Framework == "qb" then
         Player.Functions.AddMoney(tostring(type), amt)
     elseif Config.Framework == "esx" then
-        local xPlayer = ESX.GetPlayerFromId(src)
-        xPlayer.addAccountMoney(type, amt)
+        Player.addAccountMoney(type, amt)
     end
 end)
 
@@ -123,8 +110,7 @@ exports("RemoveEconomy", function(src, type, amt)
     if Config.Framework == "qb" then
         Player.Functions.RemoveMoney(type, amt)
     elseif Config.Framework == "esx" then
-        local xPlayer = ESX.GetPlayerFromId(src)
-        xPlayer.removeAccountMoney(type, amt)
+        Player.removeAccountMoney(type, amt)
     end
 end)
 
